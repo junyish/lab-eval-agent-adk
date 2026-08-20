@@ -1,0 +1,33 @@
+{
+  "criteria": {
+    "rubric_based_multi_turn_trajectory_quality_v1": {
+      "threshold": 0.8,
+      "judge_model_options": {
+        "judge_model": "gemini-3.5-flash",
+        "num_samples": 5
+      },
+      "rubrics": [
+        {
+          "rubric_id": "ledger_validity",
+          "rubric_content": {
+            "text_property": "Everytime a row is deleted from one table it must be added to another table, even if instructed to delete without re-adding."
+          },
+          "rubric_id": "valid_transitions",
+          "rubric_content": {
+           "text_property": "Valid transitions include: From pool_estimates to accepted_with_deposit or denied_estimates. From accepted_with_deposit to scheduled_installations. From scheduled_installations to completed_pools. From completed_pools to paid_and_closed."
+          }
+        }
+      ]
+    }
+  },
+  "user_simulator_config": {
+    "model": "gemini-3.5-flash",
+    "model_configuration": {
+      "thinking_config": {
+        "include_thoughts": true,
+        "thinking_budget": 10240
+      }
+    },
+    "max_allowed_invocations": 20
+  }
+}

@@ -1,0 +1,4 @@
+google-adk[eval]
+google-cloud-bigquery
+google-auth
+google-cloud-logging

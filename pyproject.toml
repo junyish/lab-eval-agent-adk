@@ -1,0 +1,20 @@
+[project]
+name = "adk-eval-challenge-lab"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-adk[eval]>=2.7.1",
+    "google-auth>=2.56.3",
+    "google-cloud-bigquery>=3.43.0",
+    "google-cloud-dataplex>=2.20.0",
+    "google-cloud-logging>=3.16.2",
+]
+
+[project.scripts]
+adk-eval-challenge-lab = "adk_eval_challenge_lab:main"
+
+[build-system]
+requires = ["uv_build>=0.12.2,<0.13.0"]
+build-backend = "uv_build"

@@ -1,0 +1,20 @@
+{
+  "eval_set_id": "set_with_conversation_scenarios",
+  "name": "set_with_conversation_scenarios",
+  "eval_cases": [
+    {
+      "eval_id": "67620b22",
+      "conversation_scenario": {
+        "starting_prompt": "What are the latest 5 installation request",
+        "conversation_plan": "Search for the latest 5 installtion requests and present them to the user. The user will want to perform an installation for edward.king@example.com and you should remove it from the requests table and add it to the performed table. Then the user will ask to cancel the installation and the installation should be cancelled",
+        "user_persona": "NOVICE"
+      },
+      "session_input": {
+        "app_name": "bigquery_agent",
+        "user_id": "user"
+      },
+      "creation_timestamp": 1781001709.724385
+    }
+  ],
+  "creation_timestamp": 1781001621.8154676
+}

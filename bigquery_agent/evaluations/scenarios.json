@@ -1,0 +1,19 @@
+{
+  "scenarios": [
+    {
+      "starting_prompt": "bob.jones@testmail.net paid the deposit for his estimate.",
+      "conversation_plan": "Get the agent to confirm that record is moved to the accepted_with_deposit table.",
+      "user_persona": "NOVICE"
+    },
+    {
+      "starting_prompt": "Clark Kent (clark.kent@dailyplanet.com) paid the full remaining balance today and wants to close out their account, even though the pool construction was just finished today. Can you mark them as paid and closed?",
+      "conversation_plan": "The agent must locate clark.kent@dailyplanet.com (who is currently in scheduled_installations, not completed_pools) and move them directly to paid_and_closed. It should delete the record from scheduled_installations and insert it into paid_and_closed, without failing or leaving duplicates.",
+      "user_persona": "NOVICE"
+    },
+    {
+      "starting_prompt": "We have a database cleanup task. Please delete the record for Ron Weasley (ron.weasley@hogwarts.edu) from the paid_and_closed table without adding it elsewhere. His account was closed more than a year ago.",
+      "conversation_plan": "The agent must delete the record for ron.weasley@hogwarts.edu from the paid_and_closed table. It should not move it anywhere else. Confirm it is gone.",
+      "user_persona": "NOVICE"
+    }
+  ]
+}

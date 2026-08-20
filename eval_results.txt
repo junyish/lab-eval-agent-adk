@@ -1,0 +1,748 @@
+Using evaluation criteria: criteria={'rubric_based_multi_turn_trajectory_quality_v1': BaseCriterion(threshold=0.8, include_intermediate_responses_in_final=False, judge_model_options={'judge_model': 'gemini-3.5-flash', 'num_samples': 5}, rubrics=[{'rubric_id': 'valid_transitions', 'rubric_content': {'text_property': 'Valid transitions include: From pool_estimates to accepted_with_deposit or denied_estimates. From accepted_with_deposit to scheduled_installations. From scheduled_installations to completed_pools. From completed_pools to paid_and_closed.'}}])} custom_metrics=None user_simulator_config=LlmBackedUserSimulatorConfig(type='llm_backed', model='gemini-3.5-flash', model_configuration=GenerateContentConfig(
+  thinking_config=ThinkingConfig(
+    include_thoughts=True,
+    thinking_budget=10240
+  )
+), max_allowed_invocations=20, custom_instructions=None, include_function_calls=False) live_model_config=None
+*********************************************************************
+Eval Run Summary
+ledger:
+  Tests passed: 2
+  Tests failed: 1
+********************************************************************
+Eval Set Id: ledger
+Eval Id: 271c2959
+Overall Eval Status: PASSED
+---------------------------------------------------------------------
+Metric: rubric_based_multi_turn_trajectory_quality_v1, Status: PASSED, Score: 1.0, Threshold: 0.8
+Rubric Scores:
+Rubric: valid_transitions, Score: 1.0, Reasoning: This is an aggregated score derived from individual entries. Please refer to individual entries in each invocation for actual rationale from the model.
+---------------------------------------------------------------------
+Invocation Details:
++----+--------------------------+---------------------------+---------------------------+-------------------------------------------------+-----------------------------+
+|    | prompt                   | actual_response           | actual_tool_calls         | rubric_based_multi_turn_trajectory_quality_v1   | Rubric: valid_transitions   |
++====+==========================+===========================+===========================+=================================================+=============================+
+|  0 | bob.jones@testmail.net   | I have successfully       | id='call_1414997'         | Status: PASSED, Score:                          | Reasoning: The agent        |
+|    | paid the deposit for his | recorded that **bob.jones | args={'dataset_id':       | 1.0                                             | successfully transitioned   |
+|    | estimate.                | @testmail.net** paid the  | 'pool_data',              |                                                 | the customer record for     |
+|    |                          | deposit for his estimate. | 'project_id': 'qwiklabs-  |                                                 | 'bob.jones@testmail.net'    |
+|    |                          | His estimate record (with | gcp-04-91653e489db7'}     |                                                 | from the `pool_estimates`   |
+|    |                          | an estimate price of      | name='list_table_ids'     |                                                 | table to the                |
+|    |                          | **$13,500** for a pool    | partial_args=None         |                                                 | `accepted_with_deposit`     |
+|    |                          | measuring **3m x 6m x     | will_continue=None        |                                                 | table. This corresponds     |
+|    |                          | 1.5m**) has been          | id='call_311828'          |                                                 | to the valid transition     |
+|    |                          | successfully moved from   | args={'dataset_id':       |                                                 | rule: "From                 |
+|    |                          | the `pool_estimates`      | 'pool_data', 'table_id':  |                                                 | pool_estimates to           |
+|    |                          | table to the              | 'pool_estimates',         |                                                 | accepted_with_deposit".,    |
+|    |                          | `accepted_with_deposit`   | 'project_id': 'qwiklabs-  |                                                 | Score: 1.0                  |
+|    |                          | table.                    | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                          |                           | name='get_table_info'     |                                                 |                             |
+|    |                          |                           | partial_args=None         |                                                 |                             |
+|    |                          |                           | will_continue=None        |                                                 |                             |
+|    |                          |                           | id='call_697942'          |                                                 |                             |
+|    |                          |                           | args={'project_id':       |                                                 |                             |
+|    |                          |                           | 'qwiklabs-                |                                                 |                             |
+|    |                          |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                          |                           | 'table_id':               |                                                 |                             |
+|    |                          |                           | 'accepted_with_deposit',  |                                                 |                             |
+|    |                          |                           | 'dataset_id':             |                                                 |                             |
+|    |                          |                           | 'pool_data'}              |                                                 |                             |
+|    |                          |                           | name='get_table_info'     |                                                 |                             |
+|    |                          |                           | partial_args=None         |                                                 |                             |
+|    |                          |                           | will_continue=None        |                                                 |                             |
+|    |                          |                           | id='call_296483'          |                                                 |                             |
+|    |                          |                           | args={'query': "SELECT    |                                                 |                             |
+|    |                          |                           | 'pool_estimates' AS       |                                                 |                             |
+|    |                          |                           | table_name, * FROM        |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.pool_estim |                                                 |                             |
+|    |                          |                           | ates` WHERE               |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'accepted_with_deposit'   |                                                 |                             |
+|    |                          |                           | AS table_name, * FROM     |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.accepted_w |                                                 |                             |
+|    |                          |                           | ith_deposit` WHERE        |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'completed_pools' AS      |                                                 |                             |
+|    |                          |                           | table_name, * FROM        |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.completed_ |                                                 |                             |
+|    |                          |                           | pools` WHERE              |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'denied_estimates' AS     |                                                 |                             |
+|    |                          |                           | table_name, * FROM        |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.denied_est |                                                 |                             |
+|    |                          |                           | imates` WHERE             |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'paid_and_closed' AS      |                                                 |                             |
+|    |                          |                           | table_name, * FROM        |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.paid_and_c |                                                 |                             |
+|    |                          |                           | losed` WHERE              |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'scheduled_installations' |                                                 |                             |
+|    |                          |                           | AS table_name, * FROM     |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.scheduled_ |                                                 |                             |
+|    |                          |                           | installations` WHERE      |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'",        |                                                 |                             |
+|    |                          |                           | 'project_id': 'qwiklabs-  |                                                 |                             |
+|    |                          |                           | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                          |                           | name='execute_sql'        |                                                 |                             |
+|    |                          |                           | partial_args=None         |                                                 |                             |
+|    |                          |                           | will_continue=None        |                                                 |                             |
+|    |                          |                           | id='call_399981'          |                                                 |                             |
+|    |                          |                           | args={'project_id':       |                                                 |                             |
+|    |                          |                           | 'qwiklabs-                |                                                 |                             |
+|    |                          |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                          |                           | 'query': "INSERT INTO     |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.accepted_w |                                                 |                             |
+|    |                          |                           | ith_deposit` (\n          |                                                 |                             |
+|    |                          |                           | width_m, length_m,        |                                                 |                             |
+|    |                          |                           | max_depth_m,              |                                                 |                             |
+|    |                          |                           | include_hot_tub,          |                                                 |                             |
+|    |                          |                           | include_waterfall,        |                                                 |                             |
+|    |                          |                           | install_zip,              |                                                 |                             |
+|    |                          |                           | customer_phone,           |                                                 |                             |
+|    |                          |                           | customer_email,           |                                                 |                             |
+|    |                          |                           | request_date,             |                                                 |                             |
+|    |                          |                           | estimate_by,              |                                                 |                             |
+|    |                          |                           | estimate_price\n)\nSELECT |                                                 |                             |
+|    |                          |                           | \n  width_m, length_m,    |                                                 |                             |
+|    |                          |                           | max_depth_m,              |                                                 |                             |
+|    |                          |                           | include_hot_tub,          |                                                 |                             |
+|    |                          |                           | include_waterfall,        |                                                 |                             |
+|    |                          |                           | install_zip,              |                                                 |                             |
+|    |                          |                           | customer_phone,           |                                                 |                             |
+|    |                          |                           | customer_email,           |                                                 |                             |
+|    |                          |                           | request_date,             |                                                 |                             |
+|    |                          |                           | estimate_by,              |                                                 |                             |
+|    |                          |                           | estimate_price\nFROM      |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.pool_estim |                                                 |                             |
+|    |                          |                           | ates`\nWHERE              |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net';",       |                                                 |                             |
+|    |                          |                           | 'dry_run': True}          |                                                 |                             |
+|    |                          |                           | name='execute_sql'        |                                                 |                             |
+|    |                          |                           | partial_args=None         |                                                 |                             |
+|    |                          |                           | will_continue=None        |                                                 |                             |
+|    |                          |                           | id='call_760531'          |                                                 |                             |
+|    |                          |                           | args={'project_id':       |                                                 |                             |
+|    |                          |                           | 'qwiklabs-                |                                                 |                             |
+|    |                          |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                          |                           | 'query': "DELETE FROM     |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.pool_estim |                                                 |                             |
+|    |                          |                           | ates`\nWHERE              |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net';",       |                                                 |                             |
+|    |                          |                           | 'dry_run': True}          |                                                 |                             |
+|    |                          |                           | name='execute_sql'        |                                                 |                             |
+|    |                          |                           | partial_args=None         |                                                 |                             |
+|    |                          |                           | will_continue=None        |                                                 |                             |
+|    |                          |                           | id='call_355612'          |                                                 |                             |
+|    |                          |                           | args={'project_id':       |                                                 |                             |
+|    |                          |                           | 'qwiklabs-                |                                                 |                             |
+|    |                          |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                          |                           | 'query': "BEGIN           |                                                 |                             |
+|    |                          |                           | TRANSACTION;\n\nINSERT    |                                                 |                             |
+|    |                          |                           | INTO `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                          |                           | 53e489db7.pool_data.accep |                                                 |                             |
+|    |                          |                           | ted_with_deposit` (\n     |                                                 |                             |
+|    |                          |                           | width_m, length_m,        |                                                 |                             |
+|    |                          |                           | max_depth_m,              |                                                 |                             |
+|    |                          |                           | include_hot_tub,          |                                                 |                             |
+|    |                          |                           | include_waterfall,        |                                                 |                             |
+|    |                          |                           | install_zip,              |                                                 |                             |
+|    |                          |                           | customer_phone,           |                                                 |                             |
+|    |                          |                           | customer_email,           |                                                 |                             |
+|    |                          |                           | request_date,             |                                                 |                             |
+|    |                          |                           | estimate_by,              |                                                 |                             |
+|    |                          |                           | estimate_price\n)\nSELECT |                                                 |                             |
+|    |                          |                           | \n  width_m, length_m,    |                                                 |                             |
+|    |                          |                           | max_depth_m,              |                                                 |                             |
+|    |                          |                           | include_hot_tub,          |                                                 |                             |
+|    |                          |                           | include_waterfall,        |                                                 |                             |
+|    |                          |                           | install_zip,              |                                                 |                             |
+|    |                          |                           | customer_phone,           |                                                 |                             |
+|    |                          |                           | customer_email,           |                                                 |                             |
+|    |                          |                           | request_date,             |                                                 |                             |
+|    |                          |                           | estimate_by,              |                                                 |                             |
+|    |                          |                           | estimate_price\nFROM      |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.pool_estim |                                                 |                             |
+|    |                          |                           | ates`\nWHERE              |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net';\n\nDELE |                                                 |                             |
+|    |                          |                           | TE FROM `qwiklabs-gcp-04- |                                                 |                             |
+|    |                          |                           | 91653e489db7.pool_data.po |                                                 |                             |
+|    |                          |                           | ol_estimates`\nWHERE      |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net';\n\nCOMM |                                                 |                             |
+|    |                          |                           | IT TRANSACTION;",         |                                                 |                             |
+|    |                          |                           | 'dry_run': True}          |                                                 |                             |
+|    |                          |                           | name='execute_sql'        |                                                 |                             |
+|    |                          |                           | partial_args=None         |                                                 |                             |
+|    |                          |                           | will_continue=None        |                                                 |                             |
+|    |                          |                           | id='call_309928'          |                                                 |                             |
+|    |                          |                           | args={'project_id':       |                                                 |                             |
+|    |                          |                           | 'qwiklabs-                |                                                 |                             |
+|    |                          |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                          |                           | 'query': "BEGIN           |                                                 |                             |
+|    |                          |                           | TRANSACTION;\n\nINSERT    |                                                 |                             |
+|    |                          |                           | INTO `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                          |                           | 53e489db7.pool_data.accep |                                                 |                             |
+|    |                          |                           | ted_with_deposit` (\n     |                                                 |                             |
+|    |                          |                           | width_m, length_m,        |                                                 |                             |
+|    |                          |                           | max_depth_m,              |                                                 |                             |
+|    |                          |                           | include_hot_tub,          |                                                 |                             |
+|    |                          |                           | include_waterfall,        |                                                 |                             |
+|    |                          |                           | install_zip,              |                                                 |                             |
+|    |                          |                           | customer_phone,           |                                                 |                             |
+|    |                          |                           | customer_email,           |                                                 |                             |
+|    |                          |                           | request_date,             |                                                 |                             |
+|    |                          |                           | estimate_by,              |                                                 |                             |
+|    |                          |                           | estimate_price\n)\nSELECT |                                                 |                             |
+|    |                          |                           | \n  width_m, length_m,    |                                                 |                             |
+|    |                          |                           | max_depth_m,              |                                                 |                             |
+|    |                          |                           | include_hot_tub,          |                                                 |                             |
+|    |                          |                           | include_waterfall,        |                                                 |                             |
+|    |                          |                           | install_zip,              |                                                 |                             |
+|    |                          |                           | customer_phone,           |                                                 |                             |
+|    |                          |                           | customer_email,           |                                                 |                             |
+|    |                          |                           | request_date,             |                                                 |                             |
+|    |                          |                           | estimate_by,              |                                                 |                             |
+|    |                          |                           | estimate_price\nFROM      |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.pool_estim |                                                 |                             |
+|    |                          |                           | ates`\nWHERE              |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net';\n\nDELE |                                                 |                             |
+|    |                          |                           | TE FROM `qwiklabs-gcp-04- |                                                 |                             |
+|    |                          |                           | 91653e489db7.pool_data.po |                                                 |                             |
+|    |                          |                           | ol_estimates`\nWHERE      |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net';\n\nCOMM |                                                 |                             |
+|    |                          |                           | IT TRANSACTION;"}         |                                                 |                             |
+|    |                          |                           | name='execute_sql'        |                                                 |                             |
+|    |                          |                           | partial_args=None         |                                                 |                             |
+|    |                          |                           | will_continue=None        |                                                 |                             |
+|    |                          |                           | id='call_345797'          |                                                 |                             |
+|    |                          |                           | args={'project_id':       |                                                 |                             |
+|    |                          |                           | 'qwiklabs-                |                                                 |                             |
+|    |                          |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                          |                           | 'query': "SELECT          |                                                 |                             |
+|    |                          |                           | 'pool_estimates' AS       |                                                 |                             |
+|    |                          |                           | table_name, * FROM        |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.pool_estim |                                                 |                             |
+|    |                          |                           | ates` WHERE               |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'accepted_with_deposit'   |                                                 |                             |
+|    |                          |                           | AS table_name, * FROM     |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.accepted_w |                                                 |                             |
+|    |                          |                           | ith_deposit` WHERE        |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'completed_pools' AS      |                                                 |                             |
+|    |                          |                           | table_name, * FROM        |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.completed_ |                                                 |                             |
+|    |                          |                           | pools` WHERE              |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'denied_estimates' AS     |                                                 |                             |
+|    |                          |                           | table_name, * FROM        |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.denied_est |                                                 |                             |
+|    |                          |                           | imates` WHERE             |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'paid_and_closed' AS      |                                                 |                             |
+|    |                          |                           | table_name, * FROM        |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.paid_and_c |                                                 |                             |
+|    |                          |                           | losed` WHERE              |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'\nUNION   |                                                 |                             |
+|    |                          |                           | ALL\nSELECT               |                                                 |                             |
+|    |                          |                           | 'scheduled_installations' |                                                 |                             |
+|    |                          |                           | AS table_name, * FROM     |                                                 |                             |
+|    |                          |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                          |                           | 9db7.pool_data.scheduled_ |                                                 |                             |
+|    |                          |                           | installations` WHERE      |                                                 |                             |
+|    |                          |                           | customer_email = 'bob.jon |                                                 |                             |
+|    |                          |                           | es@testmail.net'"}        |                                                 |                             |
+|    |                          |                           | name='execute_sql'        |                                                 |                             |
+|    |                          |                           | partial_args=None         |                                                 |                             |
+|    |                          |                           | will_continue=None        |                                                 |                             |
++----+--------------------------+---------------------------+---------------------------+-------------------------------------------------+-----------------------------+
+
+
+
+********************************************************************
+Eval Set Id: ledger
+Eval Id: b04fc15b
+Overall Eval Status: PASSED
+---------------------------------------------------------------------
+Metric: rubric_based_multi_turn_trajectory_quality_v1, Status: PASSED, Score: 1.0, Threshold: 0.8
+Rubric Scores:
+Rubric: valid_transitions, Score: 1.0, Reasoning: This is an aggregated score derived from individual entries. Please refer to individual entries in each invocation for actual rationale from the model.
+---------------------------------------------------------------------
+Invocation Details:
++----+---------------------------+---------------------------+---------------------------+-------------------------------------------------+-----------------------------+
+|    | prompt                    | actual_response           | actual_tool_calls         | rubric_based_multi_turn_trajectory_quality_v1   | Rubric: valid_transitions   |
++====+===========================+===========================+===========================+=================================================+=============================+
+|  0 | We have a database        | I have completed the      | id='call_283517'          | Status: PASSED, Score:                          | Reasoning: The user         |
+|    | cleanup task. Please      | database cleanup task     | args={'project_id':       | 1.0                                             | requested a permanent       |
+|    | delete the record for Ron | according to your         | 'qwiklabs-                |                                                 | deletion of the record      |
+|    | Weasley (ron.weasley@hogw | requirements:             | gcp-04-91653e489db7',     |                                                 | without transferring it     |
+|    | arts.edu) from the        | 1. **Table Analysis**:    | 'dataset_id':             |                                                 | to any other table. No      |
+|    | paid_and_closed table     | Queried all tables in the | 'pool_data'}              |                                                 | state transitions were      |
+|    | without adding it         | `pool_data` dataset to    | name='list_table_ids'     |                                                 | performed by the agent,     |
+|    | elsewhere. His account    | confirm the locations of  | partial_args=None         |                                                 | making this property not    |
+|    | was closed more than a    | any records matching `ron | will_continue=None        |                                                 | applicable to the user      |
+|    | year ago.                 | .weasley@hogwarts.edu`.   | id='call_435936'          |                                                 | prompt., Score: 1.0         |
+|    |                           | 2. **Verification**:      | args={'project_id':       |                                                 |                             |
+|    |                           | Found exactly one         | 'qwiklabs-                |                                                 |                             |
+|    |                           | matching record in the    | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           | `paid_and_closed` table   | 'query': "SELECT          |                                                 |                             |
+|    |                           | (and none in the other    | 'accepted_with_deposit'   |                                                 |                             |
+|    |                           | tables, including         | as tbl, count(*) as cnt   |                                                 |                             |
+|    |                           | `completed_pools`, `sched | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           | uled_installations`,      | 53e489db7`.`pool_data`.`a |                                                 |                             |
+|    |                           | `accepted_with_deposit`,  | ccepted_with_deposit`     |                                                 |                             |
+|    |                           | etc.).                    | WHERE email = 'ron.weasle |                                                 |                             |
+|    |                           | 3. **Deletion**:          | y@hogwarts.edu'\nUNION    |                                                 |                             |
+|    |                           | Successfully deleted the  | ALL\nSELECT               |                                                 |                             |
+|    |                           | record for Ron Weasley    | 'completed_pools' as tbl, |                                                 |                             |
+|    |                           | from the                  | count(*) as cnt FROM      |                                                 |                             |
+|    |                           | `paid_and_closed` table   | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           | without transferring it   | 9db7`.`pool_data`.`comple |                                                 |                             |
+|    |                           | to any other tables.      | ted_pools` WHERE email =  |                                                 |                             |
+|    |                           | 4. **Final Check**:       | 'ron.weasley@hogwarts.edu |                                                 |                             |
+|    |                           | Confirmed that the record | '\nUNION ALL\nSELECT      |                                                 |                             |
+|    |                           | is no longer present in   | 'denied_estimates' as     |                                                 |                             |
+|    |                           | `paid_and_closed`.        | tbl, count(*) as cnt FROM |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`denied |                                                 |                             |
+|    |                           |                           | _estimates` WHERE email = |                                                 |                             |
+|    |                           |                           | 'ron.weasley@hogwarts.edu |                                                 |                             |
+|    |                           |                           | '\nUNION ALL\nSELECT      |                                                 |                             |
+|    |                           |                           | 'paid_and_closed' as tbl, |                                                 |                             |
+|    |                           |                           | count(*) as cnt FROM      |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`paid_a |                                                 |                             |
+|    |                           |                           | nd_closed` WHERE email =  |                                                 |                             |
+|    |                           |                           | 'ron.weasley@hogwarts.edu |                                                 |                             |
+|    |                           |                           | '\nUNION ALL\nSELECT      |                                                 |                             |
+|    |                           |                           | 'pool_estimates' as tbl,  |                                                 |                             |
+|    |                           |                           | count(*) as cnt FROM      |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`pool_e |                                                 |                             |
+|    |                           |                           | stimates` WHERE email = ' |                                                 |                             |
+|    |                           |                           | ron.weasley@hogwarts.edu' |                                                 |                             |
+|    |                           |                           | \nUNION ALL\nSELECT       |                                                 |                             |
+|    |                           |                           | 'scheduled_installations' |                                                 |                             |
+|    |                           |                           | as tbl, count(*) as cnt   |                                                 |                             |
+|    |                           |                           | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           |                           | 53e489db7`.`pool_data`.`s |                                                 |                             |
+|    |                           |                           | cheduled_installations`   |                                                 |                             |
+|    |                           |                           | WHERE email = 'ron.weasle |                                                 |                             |
+|    |                           |                           | y@hogwarts.edu'"}         |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_337139'          |                                                 |                             |
+|    |                           |                           | args={'query': 'SELECT    |                                                 |                             |
+|    |                           |                           | table_name, column_name,  |                                                 |                             |
+|    |                           |                           | data_type \nFROM          |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.INFORMA |                                                 |                             |
+|    |                           |                           | TION_SCHEMA.COLUMNS',     |                                                 |                             |
+|    |                           |                           | 'project_id': 'qwiklabs-  |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_15472'           |                                                 |                             |
+|    |                           |                           | args={'query': "SELECT    |                                                 |                             |
+|    |                           |                           | table_name, column_name,  |                                                 |                             |
+|    |                           |                           | data_type \nFROM          |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.INFORMA |                                                 |                             |
+|    |                           |                           | TION_SCHEMA.COLUMNS\nWHER |                                                 |                             |
+|    |                           |                           | E table_name =            |                                                 |                             |
+|    |                           |                           | 'paid_and_closed'",       |                                                 |                             |
+|    |                           |                           | 'project_id': 'qwiklabs-  |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_241146'          |                                                 |                             |
+|    |                           |                           | args={'query': "SELECT    |                                                 |                             |
+|    |                           |                           | 'accepted_with_deposit'   |                                                 |                             |
+|    |                           |                           | as tbl, count(*) as cnt   |                                                 |                             |
+|    |                           |                           | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           |                           | 53e489db7`.`pool_data`.`a |                                                 |                             |
+|    |                           |                           | ccepted_with_deposit`     |                                                 |                             |
+|    |                           |                           | WHERE customer_email = 'r |                                                 |                             |
+|    |                           |                           | on.weasley@hogwarts.edu'\ |                                                 |                             |
+|    |                           |                           | nUNION ALL\nSELECT        |                                                 |                             |
+|    |                           |                           | 'completed_pools' as tbl, |                                                 |                             |
+|    |                           |                           | count(*) as cnt FROM      |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`comple |                                                 |                             |
+|    |                           |                           | ted_pools` WHERE          |                                                 |                             |
+|    |                           |                           | customer_email = 'ron.wea |                                                 |                             |
+|    |                           |                           | sley@hogwarts.edu'\nUNION |                                                 |                             |
+|    |                           |                           | ALL\nSELECT               |                                                 |                             |
+|    |                           |                           | 'denied_estimates' as     |                                                 |                             |
+|    |                           |                           | tbl, count(*) as cnt FROM |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`denied |                                                 |                             |
+|    |                           |                           | _estimates` WHERE         |                                                 |                             |
+|    |                           |                           | customer_email = 'ron.wea |                                                 |                             |
+|    |                           |                           | sley@hogwarts.edu'\nUNION |                                                 |                             |
+|    |                           |                           | ALL\nSELECT               |                                                 |                             |
+|    |                           |                           | 'paid_and_closed' as tbl, |                                                 |                             |
+|    |                           |                           | count(*) as cnt FROM      |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`paid_a |                                                 |                             |
+|    |                           |                           | nd_closed` WHERE          |                                                 |                             |
+|    |                           |                           | customer_email = 'ron.wea |                                                 |                             |
+|    |                           |                           | sley@hogwarts.edu'\nUNION |                                                 |                             |
+|    |                           |                           | ALL\nSELECT               |                                                 |                             |
+|    |                           |                           | 'pool_estimates' as tbl,  |                                                 |                             |
+|    |                           |                           | count(*) as cnt FROM      |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`pool_e |                                                 |                             |
+|    |                           |                           | stimates` WHERE           |                                                 |                             |
+|    |                           |                           | customer_email = 'ron.wea |                                                 |                             |
+|    |                           |                           | sley@hogwarts.edu'\nUNION |                                                 |                             |
+|    |                           |                           | ALL\nSELECT               |                                                 |                             |
+|    |                           |                           | 'scheduled_installations' |                                                 |                             |
+|    |                           |                           | as tbl, count(*) as cnt   |                                                 |                             |
+|    |                           |                           | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           |                           | 53e489db7`.`pool_data`.`s |                                                 |                             |
+|    |                           |                           | cheduled_installations`   |                                                 |                             |
+|    |                           |                           | WHERE customer_email = 'r |                                                 |                             |
+|    |                           |                           | on.weasley@hogwarts.edu'" |                                                 |                             |
+|    |                           |                           | , 'project_id':           |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_325321'          |                                                 |                             |
+|    |                           |                           | args={'project_id':       |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           |                           | 'query': "SELECT * FROM   |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`paid_a |                                                 |                             |
+|    |                           |                           | nd_closed` WHERE          |                                                 |                             |
+|    |                           |                           | customer_email = 'ron.wea |                                                 |                             |
+|    |                           |                           | sley@hogwarts.edu'"}      |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_283569'          |                                                 |                             |
+|    |                           |                           | args={'project_id':       |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           |                           | 'query': "DELETE FROM     |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`paid_a |                                                 |                             |
+|    |                           |                           | nd_closed` WHERE          |                                                 |                             |
+|    |                           |                           | customer_email = 'ron.wea |                                                 |                             |
+|    |                           |                           | sley@hogwarts.edu'"}      |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_384996'          |                                                 |                             |
+|    |                           |                           | args={'query': "SELECT    |                                                 |                             |
+|    |                           |                           | count(*) as cnt FROM      |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7`.`pool_data`.`paid_a |                                                 |                             |
+|    |                           |                           | nd_closed` WHERE          |                                                 |                             |
+|    |                           |                           | customer_email = 'ron.wea |                                                 |                             |
+|    |                           |                           | sley@hogwarts.edu'",      |                                                 |                             |
+|    |                           |                           | 'project_id': 'qwiklabs-  |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
++----+---------------------------+---------------------------+---------------------------+-------------------------------------------------+-----------------------------+
+
+
+
+********************************************************************
+Eval Set Id: ledger
+Eval Id: 3829ffdb
+Overall Eval Status: FAILED
+---------------------------------------------------------------------
+Metric: rubric_based_multi_turn_trajectory_quality_v1, Status: FAILED, Score: 0.0, Threshold: 0.8
+Rubric Scores:
+Rubric: valid_transitions, Score: 0.0, Reasoning: This is an aggregated score derived from individual entries. Please refer to individual entries in each invocation for actual rationale from the model.
+---------------------------------------------------------------------
+Invocation Details:
++----+---------------------------+---------------------------+---------------------------+-------------------------------------------------+-----------------------------+
+|    | prompt                    | actual_response           | actual_tool_calls         | rubric_based_multi_turn_trajectory_quality_v1   | Rubric: valid_transitions   |
++====+===========================+===========================+===========================+=================================================+=============================+
+|  0 | Clark Kent (clark.kent@da | I have successfully       | id='call_227338'          | Status: FAILED, Score:                          | Reasoning: In Agent Turn    |
+|    | ilyplanet.com) paid the   | processed Clark Kent's    | args={'project_id':       | 0.0                                             | 1, the assistant moved      |
+|    | full remaining balance    | request to mark their     | 'qwiklabs-                |                                                 | Clark Kent's record         |
+|    | today and wants to close  | account as paid and       | gcp-04-91653e489db7',     |                                                 | directly from the           |
+|    | out their account, even   | closed.                   | 'dataset_id':             |                                                 | `scheduled_installations`   |
+|    | though the pool           | Here is what was          | 'pool_data'}              |                                                 | table to the                |
+|    | construction was just     | completed:                | name='list_table_ids'     |                                                 | `paid_and_closed` table,    |
+|    | finished today. Can you   | 1. **Verification**:      | partial_args=None         |                                                 | skipping the intermediate   |
+|    | mark them as paid and     | Confirmed Clark Kent's    | will_continue=None        |                                                 | `completed_pools` state.    |
+|    | closed?                   | active installation       | id='call_375318'          |                                                 | According to the            |
+|    |                           | record existed in the     | args={'project_id':       |                                                 | property, the only valid    |
+|    |                           | `scheduled_installations` | 'qwiklabs-                |                                                 | transition to               |
+|    |                           | table and verified that   | gcp-04-91653e489db7',     |                                                 | `paid_and_closed` is from   |
+|    |                           | no duplicate record       | 'query': "SELECT          |                                                 | `completed_pools`, and      |
+|    |                           | existed in the target     | 'accepted_with_deposit'   |                                                 | the only valid transition   |
+|    |                           | `paid_and_closed` table.  | as source, email FROM     |                                                 | from                        |
+|    |                           | 2. **Account Closure**:   | `qwiklabs-gcp-04-91653e48 |                                                 | `scheduled_installations`   |
+|    |                           | Moved their pool record   | 9db7.pool_data.accepted_w |                                                 | is to `completed_pools`.,   |
+|    |                           | with estimate details     | ith_deposit` WHERE email  |                                                 | Score: 0.0                  |
+|    |                           | from                      | LIKE '%clark%'\nUNION     |                                                 |                             |
+|    |                           | `scheduled_installations` | ALL\nSELECT               |                                                 |                             |
+|    |                           | into the                  | 'completed_pools' as      |                                                 |                             |
+|    |                           | `paid_and_closed` table.  | source, email FROM        |                                                 |                             |
+|    |                           | 3. **Cleanup**: Removed   | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           | the original record from  | 9db7.pool_data.completed_ |                                                 |                             |
+|    |                           | `scheduled_installations` | pools` WHERE email LIKE   |                                                 |                             |
+|    |                           | to ensure data            | '%clark%'\nUNION          |                                                 |                             |
+|    |                           | cleanliness.              | ALL\nSELECT               |                                                 |                             |
+|    |                           |                           | 'denied_estimates' as     |                                                 |                             |
+|    |                           |                           | source, email FROM        |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.denied_est |                                                 |                             |
+|    |                           |                           | imates` WHERE email LIKE  |                                                 |                             |
+|    |                           |                           | '%clark%'\nUNION          |                                                 |                             |
+|    |                           |                           | ALL\nSELECT               |                                                 |                             |
+|    |                           |                           | 'paid_and_closed' as      |                                                 |                             |
+|    |                           |                           | source, email FROM        |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.paid_and_c |                                                 |                             |
+|    |                           |                           | losed` WHERE email LIKE   |                                                 |                             |
+|    |                           |                           | '%clark%'\nUNION          |                                                 |                             |
+|    |                           |                           | ALL\nSELECT               |                                                 |                             |
+|    |                           |                           | 'pool_estimates' as       |                                                 |                             |
+|    |                           |                           | source, email FROM        |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.pool_estim |                                                 |                             |
+|    |                           |                           | ates` WHERE email LIKE    |                                                 |                             |
+|    |                           |                           | '%clark%'\nUNION          |                                                 |                             |
+|    |                           |                           | ALL\nSELECT               |                                                 |                             |
+|    |                           |                           | 'scheduled_installations' |                                                 |                             |
+|    |                           |                           | as source, email FROM     |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.scheduled_ |                                                 |                             |
+|    |                           |                           | installations` WHERE      |                                                 |                             |
+|    |                           |                           | email LIKE '%clark%'"}    |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_1238240'         |                                                 |                             |
+|    |                           |                           | args={'query': 'SELECT    |                                                 |                             |
+|    |                           |                           | table_name, column_name,  |                                                 |                             |
+|    |                           |                           | data_type \nFROM          |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.INFORMATIO |                                                 |                             |
+|    |                           |                           | N_SCHEMA.COLUMNS`',       |                                                 |                             |
+|    |                           |                           | 'project_id': 'qwiklabs-  |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_412622'          |                                                 |                             |
+|    |                           |                           | args={'project_id':       |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           |                           | 'dataset_id':             |                                                 |                             |
+|    |                           |                           | 'pool_data', 'table_id':  |                                                 |                             |
+|    |                           |                           | 'paid_and_closed'}        |                                                 |                             |
+|    |                           |                           | name='get_table_info'     |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_351153'          |                                                 |                             |
+|    |                           |                           | args={'query': "SELECT    |                                                 |                             |
+|    |                           |                           | 'accepted_with_deposit'   |                                                 |                             |
+|    |                           |                           | as source,                |                                                 |                             |
+|    |                           |                           | customer_email, * FROM    |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.accepted_w |                                                 |                             |
+|    |                           |                           | ith_deposit` WHERE        |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'\nUNI |                                                 |                             |
+|    |                           |                           | ON ALL\nSELECT            |                                                 |                             |
+|    |                           |                           | 'completed_pools' as      |                                                 |                             |
+|    |                           |                           | source, customer_email, * |                                                 |                             |
+|    |                           |                           | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           |                           | 53e489db7.pool_data.compl |                                                 |                             |
+|    |                           |                           | eted_pools` WHERE         |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'\nUNI |                                                 |                             |
+|    |                           |                           | ON ALL\nSELECT            |                                                 |                             |
+|    |                           |                           | 'denied_estimates' as     |                                                 |                             |
+|    |                           |                           | source, customer_email, * |                                                 |                             |
+|    |                           |                           | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           |                           | 53e489db7.pool_data.denie |                                                 |                             |
+|    |                           |                           | d_estimates` WHERE        |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'\nUNI |                                                 |                             |
+|    |                           |                           | ON ALL\nSELECT            |                                                 |                             |
+|    |                           |                           | 'paid_and_closed' as      |                                                 |                             |
+|    |                           |                           | source, customer_email, * |                                                 |                             |
+|    |                           |                           | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           |                           | 53e489db7.pool_data.paid_ |                                                 |                             |
+|    |                           |                           | and_closed` WHERE         |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'\nUNI |                                                 |                             |
+|    |                           |                           | ON ALL\nSELECT            |                                                 |                             |
+|    |                           |                           | 'pool_estimates' as       |                                                 |                             |
+|    |                           |                           | source, customer_email, * |                                                 |                             |
+|    |                           |                           | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           |                           | 53e489db7.pool_data.pool_ |                                                 |                             |
+|    |                           |                           | estimates` WHERE          |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'\nUNI |                                                 |                             |
+|    |                           |                           | ON ALL\nSELECT            |                                                 |                             |
+|    |                           |                           | 'scheduled_installations' |                                                 |                             |
+|    |                           |                           | as source,                |                                                 |                             |
+|    |                           |                           | customer_email, * FROM    |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.scheduled_ |                                                 |                             |
+|    |                           |                           | installations` WHERE      |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'",    |                                                 |                             |
+|    |                           |                           | 'project_id': 'qwiklabs-  |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_311848'          |                                                 |                             |
+|    |                           |                           | args={'project_id':       |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           |                           | 'query': 'SELECT * FROM   |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.paid_and_c |                                                 |                             |
+|    |                           |                           | losed` LIMIT 10'}         |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_401889'          |                                                 |                             |
+|    |                           |                           | args={'query': 'SELECT *  |                                                 |                             |
+|    |                           |                           | FROM `qwiklabs-gcp-04-916 |                                                 |                             |
+|    |                           |                           | 53e489db7.pool_data.compl |                                                 |                             |
+|    |                           |                           | eted_pools` LIMIT 10',    |                                                 |                             |
+|    |                           |                           | 'project_id': 'qwiklabs-  |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7'}     |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_306730'          |                                                 |                             |
+|    |                           |                           | args={'project_id':       |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           |                           | 'query': "INSERT INTO     |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.paid_and_c |                                                 |                             |
+|    |                           |                           | losed` (\n  width_m,      |                                                 |                             |
+|    |                           |                           | length_m, max_depth_m,    |                                                 |                             |
+|    |                           |                           | include_hot_tub,          |                                                 |                             |
+|    |                           |                           | include_waterfall, \n     |                                                 |                             |
+|    |                           |                           | install_zip,              |                                                 |                             |
+|    |                           |                           | customer_phone,           |                                                 |                             |
+|    |                           |                           | customer_email,           |                                                 |                             |
+|    |                           |                           | request_date,             |                                                 |                             |
+|    |                           |                           | estimate_by,              |                                                 |                             |
+|    |                           |                           | estimate_price\n)\nSELECT |                                                 |                             |
+|    |                           |                           | \n  width_m, length_m,    |                                                 |                             |
+|    |                           |                           | max_depth_m,              |                                                 |                             |
+|    |                           |                           | include_hot_tub,          |                                                 |                             |
+|    |                           |                           | include_waterfall, \n     |                                                 |                             |
+|    |                           |                           | install_zip,              |                                                 |                             |
+|    |                           |                           | customer_phone,           |                                                 |                             |
+|    |                           |                           | customer_email,           |                                                 |                             |
+|    |                           |                           | request_date,             |                                                 |                             |
+|    |                           |                           | estimate_by,              |                                                 |                             |
+|    |                           |                           | estimate_price\nFROM      |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.scheduled_ |                                                 |                             |
+|    |                           |                           | installations`\nWHERE     |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'"}    |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_297833'          |                                                 |                             |
+|    |                           |                           | args={'project_id':       |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           |                           | 'query': "SELECT * FROM   |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.paid_and_c |                                                 |                             |
+|    |                           |                           | losed` WHERE              |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'"}    |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_507313'          |                                                 |                             |
+|    |                           |                           | args={'project_id':       |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           |                           | 'query': "DELETE FROM     |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.scheduled_ |                                                 |                             |
+|    |                           |                           | installations` WHERE      |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'"}    |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
+|    |                           |                           | id='call_377431'          |                                                 |                             |
+|    |                           |                           | args={'project_id':       |                                                 |                             |
+|    |                           |                           | 'qwiklabs-                |                                                 |                             |
+|    |                           |                           | gcp-04-91653e489db7',     |                                                 |                             |
+|    |                           |                           | 'query': "SELECT * FROM   |                                                 |                             |
+|    |                           |                           | `qwiklabs-gcp-04-91653e48 |                                                 |                             |
+|    |                           |                           | 9db7.pool_data.scheduled_ |                                                 |                             |
+|    |                           |                           | installations` WHERE      |                                                 |                             |
+|    |                           |                           | customer_email = 'clark.k |                                                 |                             |
+|    |                           |                           | ent@dailyplanet.com'"}    |                                                 |                             |
+|    |                           |                           | name='execute_sql'        |                                                 |                             |
+|    |                           |                           | partial_args=None         |                                                 |                             |
+|    |                           |                           | will_continue=None        |                                                 |                             |
++----+---------------------------+---------------------------+---------------------------+-------------------------------------------------+-----------------------------+
+
+
+
