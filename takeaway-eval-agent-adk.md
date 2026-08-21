@@ -1,6 +1,6 @@
 # Enterprise Agent Engineering & Evaluation Playbook: Takeaways from `lab-eval-agent-adk`
 
-> **Author / Perspective:** Google Staff Software Engineer & Forward Deployed Engineer (FDE)  
+> **Core Focus:** Production Agentic Architecture, Multi-Turn Simulation & Quality Flywheel  
 > **Target Audience:** AI Engineers, Solution Architects, and Cloud Practitioners building production-grade agentic systems on Google Cloud Platform (GCP).  
 > **Source Lab Artifact:** `lab-eval-agent-adk` (BigQuery State Machine & ADK Evaluation Challenge)
 
@@ -209,7 +209,7 @@ sequenceDiagram
 
 ## 3. GCP Product Deep Dive & Ecosystem Highlights
 
-Understanding how individual Google Cloud services interlock within an agentic architecture is essential for Staff Engineers and FDEs:
+Understanding how individual Google Cloud services interlock within an agentic architecture is essential for building production systems:
 
 | Product / Technology | Role in Agentic Architecture | Critical Production Nuance |
 |---|---|---|
@@ -222,7 +222,7 @@ Understanding how individual Google Cloud services interlock within an agentic a
 
 ---
 
-## 4. The Staff SWE & FDE Generalization Framework (Step-by-Step with Concrete Examples)
+## 4. Production Generalization Framework & Implementation Playbook (Step-by-Step with Concrete Examples)
 
 When designing, implementing, and evaluating production agents for enterprise clients, follow this **6-Stage Engineering Framework**.
 
@@ -603,7 +603,7 @@ echo "=== Eval Gate Passed Successfully ==="
 
 ## 5. Summary & Decision Matrix
 
-| Dimension | Toy / Prototype Agent | Production Enterprise Agent (Staff/FDE Standard) |
+| Dimension | Toy / Prototype Agent | Production Enterprise Standard |
 |---|---|---|
 | **Architecture** | Prompt + Raw API/SQL tools | 3-Tier Guardrails (Prompt + Bounded Python FSM + Eval) |
 | **Tool Execution** | Arbitrary SQL or unrestricted API updates | Strictly typed, atomic FSM state transition functions |
