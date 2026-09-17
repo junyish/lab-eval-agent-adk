@@ -1,6 +1,6 @@
 # Evaluation Requirement Specification: Cymbal Pools Lifecycle State Machine Agent (`bigquery_agent`)
 
-**Document Version**: 1.0.0  
+**Document Version**: 1.1.0  
 **Specification Type**: Product Requirements Document (PRD), Statement of Work (SOW) & Evaluation Standard  
 **Target Repository**: [https://github.com/junyish/lab-eval-agent-adk](https://github.com/junyish/lab-eval-agent-adk)  
 **Target Agent Package**: `bigquery_agent` (Google Cloud ADK / Gemini 3.5 Flash)  
@@ -15,7 +15,7 @@ The **Cymbal Pools Lifecycle State Machine Agent (`bigquery_agent`)** is an ente
 
 When customer inquiries, deposit confirmations, project milestones, or cancellation notices are processed, the agent inspects customer records, verifies state transition legality, executes atomic row migrations, and explains status updates to operational coordinators.
 
-Because premature state advancement or accidental record deletion directly impacts construction scheduling, supply procurement, and revenue recognition, the agent is subject to strict deterministic business, architectural, and mathematical invariants evaluated on the **Verifiability Ladder ($V_0 \to V_3$)**.
+Because premature state advancement or accidental record deletion directly impacts construction scheduling, supply procurement, and revenue recognition, the agent is subject to strict deterministic business, architectural, and mathematical invariants evaluated on the **Verifiability Ladder (V0 to V3)**.
 
 ---
 
@@ -66,7 +66,7 @@ flowchart TD
 
 ## 3. High-Level Requirements & Verifiable Criteria
 
-The evaluation requirements are organized into five core functional pillars. Every requirement is mapped to its lowest capable evaluation tier on the Verifiability Ladder ($V_0 \to V_3$).
+The evaluation requirements are organized into five core functional pillars. Every requirement is mapped to its lowest capable evaluation tier on the Verifiability Ladder (V0 to V3).
 
 ```mermaid
 flowchart TD
@@ -119,13 +119,13 @@ flowchart TD
   Every customer record must exist in exactly one valid state table at any point in time. Records must never vanish without atomic insertion into the destination table:
 
 $$
-\sum_{T \in \mathcal{T}} \mathbb{I}(\text{customer\_email} \in T) = 1
+\sum_{T \in \mathcal{T}} \mathbf{1}(\text{customer} \in T) = 1
 $$
 
-  where:
+  where $\mathcal{T}$ represents the set of six mutually exclusive lifecycle tables:
 
 $$
-\mathcal{T} = \{\text{pool\_estimates}, \text{accepted\_with\_deposit}, \text{denied\_estimates}, \text{scheduled\_installations}, \text{completed\_pools}, \text{paid\_and\_closed}\}
+\mathcal{T} = \{ T_{\text{estimates}}, T_{\text{accepted}}, T_{\text{denied}}, T_{\text{scheduled}}, T_{\text{completed}}, T_{\text{closed}} \}
 $$
 
   - **Verification Tier**: Tier V1 (Deterministic BigQuery Oracle check verifying pre- and post-transaction table counts).
@@ -152,22 +152,24 @@ stateDiagram-v2
     denied_estimates --> [*]
 ```
 
-  Formally, the transition $(s_t \to s_{t+1})$ must belong to the valid edge set $\mathcal{E}$:
+  Formally, the transition must belong to the valid directed edge set $\mathcal{E}$:
 
 $$
-\mathcal{E} = \left\{
-\begin{array}{l}
-(\text{pool\_estimates}, \text{accepted\_with\_deposit}), \\
-(\text{pool\_estimates}, \text{denied\_estimates}), \\
-(\text{accepted\_with\_deposit}, \text{scheduled\_installations}), \\
-(\text{scheduled\_installations}, \text{completed\_pools}), \\
-(\text{completed\_pools}, \text{paid\_and\_closed})
-\end{array}
-\right\}
+\text{Transition}(s_t \to s_{t+1}) \in \mathcal{E}
 $$
+
+  where $\mathcal{E}$ comprises the five authorized business progression paths:
+
+| From Table ($s_t$) | To Table ($s_{t+1}$) | Operational Meaning |
+| :--- | :--- | :--- |
+| `pool_estimates` | `accepted_with_deposit` | Customer accepted estimate with initial deposit |
+| `pool_estimates` | `denied_estimates` | Customer declined initial estimate |
+| `accepted_with_deposit` | `scheduled_installations` | Construction date confirmed and installation scheduled |
+| `scheduled_installations` | `completed_pools` | Pool construction completed and passed inspection |
+| `completed_pools` | `paid_and_closed` | Final project balance cleared and account closed |
 
   - **Verification Tier**: Tier V0 (Deterministic Set Membership over tool parameters).
-  - **Acceptance Rule**: `(from_table, to_table) in valid_transitions`. Skipping intermediate states (e.g. `scheduled_installations` directly to `paid_and_closed`) is strictly forbidden.
+  - **Acceptance Rule**: `(from_table, to_table) in valid_transitions`. Skipping intermediate states (e.g. jumping from `scheduled_installations` directly to `paid_and_closed`) is strictly forbidden.
 
 ---
 
@@ -181,12 +183,10 @@ $$
   - **Repair Message**: `"Schema error: Table '{table_name}' does not exist in dataset 'pool_data'. Valid tables: pool_estimates, accepted_with_deposit, denied_estimates, scheduled_installations, completed_pools, paid_and_closed."`
 
 - **REQ-SCH-02 (Email Key Formatting)**:
-  Customer identifiers must conform to standard RFC 5322 email formatting regex:
-
-$$
-\text{regex} = \texttt{^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$}
-$$
-
+  Customer identifiers must conform to standard RFC 5322 email formatting:
+  ```
+  ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+  ```
   - **Verification Tier**: Tier V0 (Deterministic Regex String Match).
   - **Acceptance Rule**: `customer_email` parameter passes regex validation.
 
@@ -202,18 +202,18 @@ $$
 \text{Remaining Balance} = \text{Total Estimate Amount} - \text{Deposit Paid}
 $$
 
-  - **Verification Tier**: Tier V1 (Deterministic Math Oracle verified against BigQuery row data within $\pm 0.01$ tolerance).
+  - **Verification Tier**: Tier V1 (Deterministic Math Oracle verified against BigQuery row data within ±$0.01 tolerance).
   - **Acceptance Rule**: Calculated balance matches `total_amount - deposit_amount` from `accepted_with_deposit` or `scheduled_installations`.
 
 - **REQ-FIN-02 (Deposit Percentage Hurdle)**:
-  Transition from `pool_estimates` to `accepted_with_deposit` requires a minimum deposit of $10.0\%$ of total contract value:
+  Transition from `pool_estimates` to `accepted_with_deposit` requires a minimum deposit of 10.0% of total contract value:
 
 $$
 \text{Deposit Ratio} = \frac{\text{Deposit Paid}}{\text{Total Estimate Amount}} \ge 0.10
 $$
 
   - **Verification Tier**: Tier V2 (Model Numeric Extraction + Deterministic Arithmetic Check).
-  - **Acceptance Rule**: Deposit satisfies the $\ge 10.0\%$ hurdle before moving to accepted state.
+  - **Acceptance Rule**: Deposit satisfies the >= 10.0% hurdle before moving to accepted state.
 
 ---
 
@@ -253,9 +253,9 @@ $$
 | `REQ-EXP-02` | Robustness | `rubric: adversarial_shortcut_refusal` | **V3** | Gemini 3.5 Flash Judge | Offline |
 
 ### Coverage Metrics
-- **Deterministic Coverage** ($\frac{V_0 + V_1}{\text{Total}}$): $\frac{8}{11} = 72.7\%$
-- **Mechanized Coverage** ($\frac{V_0 + V_1 + V_2}{\text{Total}}$): $\frac{10}{11} = 90.9\%$
-- **Subjective Residue** ($\frac{V_3}{\text{Total}}$): $\frac{1}{11} = 9.1\%$
+- **Deterministic Coverage** ($(V_0 + V_1) / \text{Total}$): $8 / 11 \approx 72.7\%$
+- **Mechanized Coverage** ($(V_0 + V_1 + V_2) / \text{Total}$): $10 / 11 \approx 90.9\%$
+- **Subjective Residue** ($V_3 / \text{Total}$): $1 / 11 \approx 9.1\%$
 
 ---
 
@@ -295,20 +295,44 @@ Before any criterion is permitted to gate a production deployment, it must empir
 
 To eliminate rater drift in subjective evaluation ($V_3$), multi-turn trajectory evaluators (`eval_config.json`) must be statistically certified across $k$-pass repeated evaluations ($k = 5$) using formal mathematical criteria:
 
-### 6.1 Krippendorff's Alpha ($\alpha$)
-Evaluates inter-pass rater reliability beyond chance:
+### 6.1 Krippendorff's Alpha for Multi-Sample Reliability
+Evaluates inter-pass rater reliability $\alpha$ beyond chance:
 
 $$
 \alpha = 1 - \frac{D_o}{D_e}
 $$
 
-where $D_o$ is observed disagreement and $D_e$ is expected chance disagreement across evaluations.
+where $D_o$ is the observed disagreement among ratings for the same multi-turn trajectory:
 
-- **Certification Threshold**: $\alpha \ge 0.800$ (High reliability). Any autorater with $\alpha < 0.700$ is rejected from production release gates.
+$$
+D_o = \frac{1}{N \cdot k (k - 1)} \sum_{u=1}^N \sum_{i=1}^k \sum_{j=1}^k (r_{ui} - r_{uj})^2
+$$
 
-### 6.2 Score Spread & Agreement
-- **Pairwise Percent Agreement**: $\ge 80.0\%$ across all 5 evaluation samples.
-- **Intra-Sample Rating Range**: $\max_i(r_i) - \min_i(r_i) \le 1.0$ (Zero tolerance for bimodal ratings).
+and $D_e$ is the expected disagreement if ratings were assigned at random across the marginal distribution:
+
+$$
+D_e = \frac{1}{N \cdot k (N \cdot k - 1)} \sum_{u=1}^N \sum_{i=1}^k \sum_{v=1}^N \sum_{j=1}^k (r_{ui} - r_{vj})^2
+$$
+
+- **Certification Threshold**: $\alpha \ge 0.800$ (High reliability; autoraters with $\alpha < 0.700$ are rejected from production release gates).
+
+### 6.2 Pairwise Percent Agreement
+Measures the proportion of rater pairs that assign identical integer scores:
+
+$$
+\text{Pairwise Agreement} = \frac{1}{N} \sum_{u=1}^N \frac{\sum_{i < j} \mathbf{1}(r_{ui} = r_{uj})}{\binom{k}{2}}
+$$
+
+- **Acceptance Threshold**: Pairwise Agreement $\ge 80.0\%$.
+
+### 6.3 Intra-Sample Rating Range
+The spread of scores assigned to the identical trajectory across all $k$ passes:
+
+$$
+\text{Range}_u = \max_{i} (r_{ui}) - \min_{i} (r_{ui})
+$$
+
+- **Acceptance Threshold**: $\max_u (\text{Range}_u) \le 1$ (Zero tolerance for score swings $\ge 2$).
 
 ---
 
@@ -321,4 +345,4 @@ All changes to prompts, tools, or dependencies in `lab-eval-agent-adk` must pass
 pytest tests/evalloop/test_bq_agent_safety.py -v
 ```
 
-All $V_0$ criteria execute in $< 50\text{ms}$ with zero API token cost, providing instantaneous local feedback to engineers during development.
+All Tier V0 criteria execute in under 50ms with zero API token cost, providing instantaneous local feedback to engineers during development.
