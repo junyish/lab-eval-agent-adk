@@ -3,13 +3,14 @@
 Enforces the runtime subset of criteria from `evalloop/criteria/bigquery_agent_safety.yaml`
 at agent tool execution boundaries.
 
-Usage in ADK:
+Usage in ADK (the installed `evalloop` package shadows this directory, so
+`from evalloop.guardrail import ...` does not resolve; load the pack directly):
     from google.adk.apps import App
-    from evalloop.guardrail import get_guardrail_plugin
+    from evalloop.adk import EvalLoopPlugin
 
     app = App(
         ...,
-        plugins=[get_guardrail_plugin()],
+        plugins=[EvalLoopPlugin.from_file("evalloop/criteria/bigquery_agent_safety.yaml")],
     )
 """
 
